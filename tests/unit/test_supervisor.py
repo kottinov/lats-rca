@@ -25,8 +25,8 @@ def test_supervisor_skips_metrics_when_log_is_confident() -> None:
         result=AgentRunResult(
             agent_name="log_agent",
             summary="Timeout errors in auth service.",
-            r=0.85,
-            c=0.8,
+            confidence=0.85,
+            completeness=0.8,
             evidence_count=4,
             escalate=False,
         )
@@ -35,8 +35,8 @@ def test_supervisor_skips_metrics_when_log_is_confident() -> None:
         result=AgentRunResult(
             agent_name="metrics_agent",
             summary="CPU remains stable.",
-            r=0.9,
-            c=0.9,
+            confidence=0.9,
+            completeness=0.9,
             evidence_count=3,
             escalate=False,
         )
@@ -56,8 +56,8 @@ def test_supervisor_escalates_and_passes_log_summary() -> None:
         result=AgentRunResult(
             agent_name="log_agent",
             summary="Error bursts in token endpoint with timeout traces.",
-            r=0.45,
-            c=0.45,
+            confidence=0.45,
+            completeness=0.45,
             evidence_count=5,
             escalate=True,
         )
@@ -66,8 +66,8 @@ def test_supervisor_escalates_and_passes_log_summary() -> None:
         result=AgentRunResult(
             agent_name="metrics_agent",
             summary="Metrics show timeout spikes and error correlation in auth pods.",
-            r=0.8,
-            c=0.75,
+            confidence=0.8,
+            completeness=0.75,
             evidence_count=4,
             escalate=False,
         )
@@ -78,7 +78,7 @@ def test_supervisor_escalates_and_passes_log_summary() -> None:
 
     assert metrics_worker.call_count == 1
     assert metrics_worker.last_query is not None
-    assert "Context from log agent summary" in metrics_worker.last_query
+    assert "Context from log agent" in metrics_worker.last_query
     assert log_worker.result.summary in metrics_worker.last_query
     assert result.metrics_result is not None
     assert result.correlation in {"strong_correlation", "weak_correlation", "no_correlation"}

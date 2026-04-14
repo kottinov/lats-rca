@@ -102,7 +102,22 @@ class LanguageAgentTreeSearch:
             [
                 (
                     "system",
-                    "Reflect and grade the assistant response to the user question below.",
+                    "Reflect on and grade the assistant response to the user question below.\n\n"
+                    "Score the response on three dimensions (each 0-10):\n\n"
+                    "1. **Evidence quality** — Are the retrieved artefacts (logs, metrics, "
+                    "traces) relevant to the failure and sufficient to support the "
+                    "diagnosis? Award high scores when evidence directly addresses the "
+                    "failure mode; penalise when critical data sources are ignored or "
+                    "irrelevant artefacts are cited.\n\n"
+                    "2. **Diagnostic completeness** — Does the response enumerate "
+                    "plausible root-cause hypotheses and systematically confirm or rule "
+                    "out each one? Award high scores for methodical elimination; penalise "
+                    "when obvious hypotheses are omitted or only a single cause is "
+                    "considered.\n\n"
+                    "3. **Internal consistency** — Are the claims logically coherent, "
+                    "free of contradictions, and properly supported by the cited evidence? "
+                    "Penalise when conclusions contradict the presented data or when "
+                    "reasoning steps are missing.",
                 ),
                 ("user", "{input}"),
                 MessagesPlaceholder(variable_name="candidate"),

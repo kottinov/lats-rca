@@ -38,7 +38,7 @@ class SearchNode:
 
     Example:
         >>> from langchain_core.messages import AIMessage
-        >>> reflection = Reflection(reflections="Good start", score=7, found_solution=False)
+        >>> reflection = Reflection(reflections="Good start", evidence_quality=7, diagnostic_completeness=7, internal_consistency=7, found_solution=False)
         >>> node = SearchNode(messages=[AIMessage(content="Hello")], reflection=reflection)
         >>> node.depth
         1

@@ -8,7 +8,13 @@ from lats.models.reflection import Reflection
 
 
 def _node(score: int, solved: bool = False, parent: SearchNode | None = None) -> SearchNode:
-    reflection = Reflection(reflections="test", score=score, found_solution=solved)
+    reflection = Reflection(
+        reflections="test",
+        evidence_quality=score,
+        diagnostic_completeness=score,
+        internal_consistency=score,
+        found_solution=solved,
+    )
     return SearchNode(messages=[AIMessage(content="ok")], reflection=reflection, parent=parent)
 
 

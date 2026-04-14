@@ -38,7 +38,11 @@ def test_search_node_creation() -> None:
     from lats.models import SearchNode
 
     reflection = Reflection(
-        reflections="Test reflection", score=7, found_solution=False
+        reflections="Test reflection",
+        evidence_quality=7,
+        diagnostic_completeness=7,
+        internal_consistency=7,
+        found_solution=False,
     )
 
     node = SearchNode(
@@ -56,7 +60,11 @@ def test_policy_functions() -> None:
     from lats.models import SearchNode
 
     reflection = Reflection(
-        reflections="Test reflection", score=7, found_solution=False
+        reflections="Test reflection",
+        evidence_quality=7,
+        diagnostic_completeness=7,
+        internal_consistency=7,
+        found_solution=False,
     )
 
     root = SearchNode(
@@ -70,7 +78,11 @@ def test_policy_functions() -> None:
     assert decision == "expand"
 
     solved_reflection = Reflection(
-        reflections="Perfect", score=10, found_solution=True
+        reflections="Perfect",
+        evidence_quality=10,
+        diagnostic_completeness=10,
+        internal_consistency=10,
+        found_solution=True,
     )
     solved_node = SearchNode(
         messages=[AIMessage(content="Solved")], reflection=solved_reflection

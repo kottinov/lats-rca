@@ -11,7 +11,11 @@ from lats.models.reflection import Reflection
 def sample_reflection() -> Reflection:
     """Provide a sample reflection for testing."""
     return Reflection(
-        reflections="Good starting point", score=7, found_solution=False
+        reflections="Good starting point",
+        evidence_quality=7,
+        diagnostic_completeness=7,
+        internal_consistency=7,
+        found_solution=False,
     )
 
 
@@ -166,7 +170,11 @@ class TestSearchNode:
 
         # Create a solved grandchild
         solved_reflection = Reflection(
-            reflections="Perfect answer", score=10, found_solution=True
+            reflections="Perfect answer",
+            evidence_quality=10,
+            diagnostic_completeness=10,
+            internal_consistency=10,
+            found_solution=True,
         )
         grandchild = SearchNode(
             messages=[AIMessage(content="Solved!")],
@@ -185,9 +193,20 @@ class TestSearchNode:
             messages=[AIMessage(content="Root")], reflection=sample_reflection
         )
 
-        # Create multiple children with different scores
-        high_score = Reflection(reflections="Great", score=9, found_solution=True)
-        low_score = Reflection(reflections="Okay", score=5, found_solution=False)
+        high_score = Reflection(
+            reflections="Great",
+            evidence_quality=9,
+            diagnostic_completeness=9,
+            internal_consistency=9,
+            found_solution=True,
+        )
+        low_score = Reflection(
+            reflections="Okay",
+            evidence_quality=5,
+            diagnostic_completeness=5,
+            internal_consistency=5,
+            found_solution=False,
+        )
 
         child1 = SearchNode(
             messages=[AIMessage(content="Good")],

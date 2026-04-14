@@ -23,8 +23,6 @@ from langgraph.prebuilt import ToolNode
 from lats.config.agent import HandoffThresholds, MAX_EVIDENCE_ITEMS
 from lats.core.search import LanguageAgentTreeSearch
 from lats.models.agent import (
-    AgentCompleteness,
-    AgentConfidence,
     AgentRunResult,
     EvidenceCount,
     validate_completeness,
@@ -183,7 +181,9 @@ class LATSSubAgent:
 
         reflection = solution.reflection
         confidence = validate_confidence(float(reflection.normalized_score))
-        completeness = self._estimate_completeness(trajectory, confidence)
+        completeness = validate_completeness(
+            float(reflection.normalized_diagnostic_completeness)
+        )
         evidence_count = self._count_evidence(trajectory)
         summary = self._build_summary(solution, trajectory)
         escalate = self.thresholds.should_escalate(confidence, completeness)
@@ -207,31 +207,6 @@ class LATSSubAgent:
             Query augmented with modality instructions
         """
         return f"{self.modality_prompt}\n\n{query}"
-
-    @staticmethod
-    def _estimate_completeness(
-        trajectory: list[BaseMessage], confidence: AgentConfidence
-    ) -> AgentCompleteness:
-        """Estimate investigation completeness from trajectory and confidence.
-
-        Completeness is a function of both the confidence in findings and
-        the depth of investigation (measured by trajectory length).
-
-        Args:
-            trajectory: Message history from search
-            confidence: Confidence in the findings
-
-        Returns:
-            Estimated completeness score
-
-        Note:
-            This is a heuristic. In future versions, we may train a dedicated
-            completeness estimator or use explicit completeness criteria.
-        """
-        # penalize low confidence and shallow investigations
-        trajectory_depth_factor = min(len(trajectory) / 10.0, 1.0)
-        estimated = float(confidence) * 0.7 + trajectory_depth_factor * 0.3
-        return validate_completeness(estimated)
 
     @staticmethod
     def _count_evidence(trajectory: list[BaseMessage]) -> EvidenceCount:

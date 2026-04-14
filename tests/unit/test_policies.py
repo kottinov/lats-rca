@@ -12,7 +12,11 @@ from lats.models.reflection import Reflection
 def sample_reflection() -> Reflection:
     """Provide a sample reflection for testing."""
     return Reflection(
-        reflections="Good starting point", score=7, found_solution=False
+        reflections="Good starting point",
+        evidence_quality=7,
+        diagnostic_completeness=7,
+        internal_consistency=7,
+        found_solution=False,
     )
 
 
@@ -107,7 +111,11 @@ class TestShouldContinue:
     def test_stop_when_solved(self, sample_reflection: Reflection) -> None:
         """Test that search stops when solution found."""
         solved_reflection = Reflection(
-            reflections="Perfect", score=10, found_solution=True
+            reflections="Perfect",
+            evidence_quality=10,
+            diagnostic_completeness=10,
+            internal_consistency=10,
+            found_solution=True,
         )
         root = SearchNode(
             messages=[AIMessage(content="Solved")], reflection=solved_reflection
