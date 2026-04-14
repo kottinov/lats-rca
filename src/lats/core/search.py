@@ -19,6 +19,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode
 
 from lats.core.policies import Decision, select_leaf, should_continue
+from lats.core.scoring import compute_combined_reward, compute_self_consistency
 from lats.models.config import LATSConfig
 from lats.models.node import SearchNode
 from lats.models.reflection import Reflection
@@ -360,10 +361,22 @@ class LanguageAgentTreeSearch:
                 batched_messages[candidate_index].append(output["messages"][-1])
 
         reflections = self._reflect_batch(state["input"], batched_messages)
+        consistency_scores = compute_self_consistency(candidates)
 
         children = [
-            SearchNode(messages=messages, reflection=reflection, parent=best_leaf)
-            for messages, reflection in zip(batched_messages, reflections, strict=True)
+            SearchNode(
+                messages=messages,
+                reflection=reflection,
+                parent=best_leaf,
+                reward_override=compute_combined_reward(
+                    reflection_score=reflection.normalized_score,
+                    self_consistency=consistency,
+                    alpha=self.config.consistency_weight,
+                ),
+            )
+            for messages, reflection, consistency in zip(
+                batched_messages, reflections, consistency_scores, strict=True
+            )
         ]
 
         best_leaf.children.extend(children)

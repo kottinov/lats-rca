@@ -37,6 +37,7 @@ class LATSConfig:
     max_depth: int = 5
     max_search_results: int = 5
     exploration_weight: float = 1.0
+    consistency_weight: float = 0.7
 
     def validate(self) -> None:
         """Validate configuration values.
@@ -73,4 +74,10 @@ class LATSConfig:
             raise LATSConfigError(
                 "exploration_weight must be >= 0",
                 context={"exploration_weight": self.exploration_weight},
+            )
+
+        if not 0.0 <= self.consistency_weight <= 1.0:
+            raise LATSConfigError(
+                "consistency_weight must be in [0.0, 1.0]",
+                context={"consistency_weight": self.consistency_weight},
             )

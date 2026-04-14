@@ -52,6 +52,7 @@ class SearchNode:
     children: list[SearchNode] = field(default_factory=list)
     value: float = 0.0
     visits: int = 0
+    reward_override: float | None = None
     depth: int = field(init=False)
     _is_solved: bool = field(init=False, default=False)
 
@@ -70,7 +71,12 @@ class SearchNode:
         if self._is_solved:
             self._mark_ancestors_solved()
 
-        self.backpropagate(self.reflection.normalized_score)
+        reward = (
+            self.reward_override
+            if self.reward_override is not None
+            else self.reflection.normalized_score
+        )
+        self.backpropagate(reward)
 
     @property
     def is_solved(self) -> bool:

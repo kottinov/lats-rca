@@ -63,6 +63,18 @@ class TestLATSConfig:
         with pytest.raises(LATSConfigError, match="exploration_weight must be"):
             config.validate()
 
+    def test_validate_invalid_consistency_weight_too_high(self) -> None:
+        """Test validation of consistency_weight above 1.0."""
+        config = LATSConfig(consistency_weight=1.5)
+        with pytest.raises(LATSConfigError, match="consistency_weight must be"):
+            config.validate()
+
+    def test_validate_invalid_consistency_weight_negative(self) -> None:
+        """Test validation of negative consistency_weight."""
+        config = LATSConfig(consistency_weight=-0.1)
+        with pytest.raises(LATSConfigError, match="consistency_weight must be"):
+            config.validate()
+
     def test_validate_valid_config(self) -> None:
         """Test that valid config passes validation."""
         config = LATSConfig()
